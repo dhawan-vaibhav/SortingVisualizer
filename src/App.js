@@ -10,28 +10,38 @@ class BubbleSort extends Component {
 
   display(comparisons) {
     const arrayBar = document.getElementsByClassName("bar");
-    console.log(comparisons)
+    console.log(comparisons);
+    let round = 0;
+    let size = 0;
+    for (let j = 0; j < 10; j++) {
+      myDisplay();
+    }
 
-    for (let i = 0; i < arrayBar.length - 1; i++) {
-      setTimeout(() => {
-        arrayBar[i].style.backgroundColor = "red";
-        arrayBar[i + 1].style.backgroundColor = "red";
-
+    function myDisplay() {
+      for (let i = 0; i < arrayBar.length - 1; i++) {
         setTimeout(() => {
-          arrayBar[i].style.height = `${comparisons[i][0] * 5}px`;
-          arrayBar[i].innerHTML=`${comparisons[i][0]}`
-          arrayBar[i + 1].style.height = `${comparisons[i][1] * 5}px`;
-          arrayBar[i+1].innerHTML=`${comparisons[i][1]}`
-        }, (i + 1) * 3000);
+          arrayBar[i].style.backgroundColor = "red";
+          arrayBar[i + 1].style.backgroundColor = "red";
+          if (i >= 1) {
+            arrayBar[i - 1].style.backgroundColor = "yellow";
+          }
 
-      }, (i + 1) * 1000);
+          setTimeout(() => {
+            arrayBar[i].style.height = `${comparisons[round][0] * 5}px`;
+            arrayBar[i].innerHTML = `${comparisons[round][0]}`;
+            arrayBar[i + 1].style.height = `${comparisons[round][1] * 5}px`;
+            arrayBar[i + 1].innerHTML = `${comparisons[round][1]}`;
+            round++;
+          }, (i + 1) * 100);
+        }, (i + 1) * 2000);
+      }
     }
   }
   sort() {
     const numbers = this.props.numbers.slice();
     const comparisons = [];
-    for (let i = 0; i < numbers.length; i++) {
-      for (let j = 0; j < numbers.length - i; j++) {
+    for (let i = 0; i < numbers.length - 1; i++) {
+      for (let j = 0; j < numbers.length - 1 - i; j++) {
         if (numbers[j] > numbers[j + 1]) {
           let temp = numbers[j];
           numbers[j] = numbers[j + 1];
@@ -41,6 +51,7 @@ class BubbleSort extends Component {
         comparisons.push(swap);
       }
     }
+    console.log(comparisons);
     {
       this.display(comparisons);
     }
@@ -58,7 +69,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(3).fill(null),
+      numbers: Array(4).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
