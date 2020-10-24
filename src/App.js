@@ -2,43 +2,51 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 
+let barIndex = 0;
 class BubbleSort extends Component {
   constructor(props) {
     super(props);
     this.sort = this.sort.bind(this);
   }
 
-  display(comparisons) {
+  display(comparisons,arrayLength) {
     const arrayBar = document.getElementsByClassName("bar");
+    let barIndex = 0;
+    let round =0;
     console.log(comparisons);
-    let round = 0;
-    let size = 0;
-    for (let j = 0; j < 10; j++) {
-      myDisplay();
-    }
-
-    function myDisplay() {
-      for (let i = 0; i < arrayBar.length - 1; i++) {
-        setTimeout(() => {
-          arrayBar[i].style.backgroundColor = "red";
-          arrayBar[i + 1].style.backgroundColor = "red";
-          if (i >= 1) {
-            arrayBar[i - 1].style.backgroundColor = "yellow";
-          }
-
-          setTimeout(() => {
-            arrayBar[i].style.height = `${comparisons[round][0] * 5}px`;
-            arrayBar[i].innerHTML = `${comparisons[round][0]}`;
-            arrayBar[i + 1].style.height = `${comparisons[round][1] * 5}px`;
-            arrayBar[i + 1].innerHTML = `${comparisons[round][1]}`;
+    for (let i = 0; i < comparisons.length; i++) {
+      
+      setTimeout(() => {
+        if(barIndex===arrayLength-1-round){
+          arrayBar[barIndex].style.backgroundColor="orange";
+          arrayBar[barIndex-1].style.backgroundColor="yellow";
+            barIndex=0;
             round++;
-          }, (i + 1) * 100);
-        }, (i + 1) * 2000);
-      }
+        }
+        if (barIndex>=1) {
+          arrayBar[barIndex-1].style.backgroundColor = "yellow";
+        }
+        arrayBar[barIndex].style.backgroundColor = "red";
+        arrayBar[barIndex + 1].style.backgroundColor = "red";
+        setTimeout(() => {
+          if(barIndex===arrayLength-1-round){
+            arrayBar[barIndex].style.backgroundColor="orange";
+            barIndex=0;
+            round++;
+        }
+          arrayBar[barIndex].style.height = `${comparisons[i][0] * 5}px`;
+          arrayBar[barIndex].innerHTML = `${comparisons[i][0]}`;
+          arrayBar[barIndex + 1].style.height = `${comparisons[i][1] * 5}px`;
+          arrayBar[barIndex + 1].innerHTML = `${comparisons[i][1]}`;
+          barIndex++;
+        }, (i + 1) * 1);
+      }, (i + 1) * 10);
     }
   }
   sort() {
     const numbers = this.props.numbers.slice();
+    const arrayLength = numbers.length;
+    const numSwaps = 0;
     const comparisons = [];
     for (let i = 0; i < numbers.length - 1; i++) {
       for (let j = 0; j < numbers.length - 1 - i; j++) {
@@ -51,10 +59,8 @@ class BubbleSort extends Component {
         comparisons.push(swap);
       }
     }
-    console.log(comparisons);
-    {
-      this.display(comparisons);
-    }
+
+    this.display(comparisons,arrayLength);
   }
   render() {
     return (
@@ -69,7 +75,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(4).fill(null),
+      numbers: Array(45).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
