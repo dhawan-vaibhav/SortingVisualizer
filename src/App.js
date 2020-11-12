@@ -10,13 +10,20 @@ async function display2(comparisons, arrayLength, LastIndex) {
   for (let i = 0; i < comparisons.length + LastIndex; i++) {
     arrayBar[barIndex].style.backgroundColor = "LawnGreen";
     arrayBar[barIndex + 1].style.backgroundColor = "LawnGreen";
+    if (arrayBar[barIndex].style.height > arrayBar[barIndex+1].style.height) {
+      arrayBar[barIndex].style.backgroundColor = "red";
+      arrayBar[barIndex + 1].style.backgroundColor = "red";
+      await sleep(1);
+    }
     //console.log("Red Display")
     await sleep(0.5);
     if (i < comparisons.length) {
       arrayBar[barIndex].style.height = `${comparisons[i][0] * 1.5}px`;
-      //arrayBar[barIndex].innerHTML = `${comparisons[i][0]}`;
       arrayBar[barIndex + 1].style.height = `${comparisons[i][1] * 1.5}px`;
-      //arrayBar[barIndex + 1].innerHTML = `${comparisons[i][1]}`;
+      arrayBar[barIndex].style.backgroundColor = "LawnGreen";
+      arrayBar[barIndex + 1].style.backgroundColor = "LawnGreen";
+      await sleep(1);
+
       arrayBar[barIndex].style.backgroundColor = "skyblue";
       barIndex++;
       if (barIndex === arrayLength - round) {
@@ -55,28 +62,29 @@ class MergeSort extends Component {
     const numbers = this.props.numbers.slice();
     const arrayBar = document.getElementsByClassName("bar");
     const animations = getMergeSortAnimations(numbers);
-    for(let i=0; i<animations.length; i++){
-      const[barIdxOne,barIdxTwo]=animations[i];
-      if(i%2==0){
-      setTimeout(async function blink(){
-        arrayBar[barIdxOne].style.backgroundColor="red";
-        arrayBar[barIdxTwo].style.backgroundColor="red";
-        await sleep(10);
-        arrayBar[barIdxOne].style.backgroundColor="skyBlue";
-        arrayBar[barIdxTwo].style.backgroundColor="skyBlue";
-
-      },i*10)
+    for (let i = 0; i < animations.length; i++) {
+      const [barIdxOne, barIdxTwo] = animations[i];
+      if (i % 2 == 0) {
+        setTimeout(async function blink() {
+          arrayBar[barIdxOne].style.backgroundColor = "red";
+          arrayBar[barIdxTwo].style.backgroundColor = "red";
+          await sleep(10);
+          arrayBar[barIdxOne].style.backgroundColor = "skyBlue";
+          arrayBar[barIdxTwo].style.backgroundColor = "skyBlue";
+          if (i === animations.length-1) {
+            completed();
+          }
+        }, i * 10);
+      } else {
+        setTimeout(() => {
+          arrayBar[barIdxOne].style.height = `${barIdxTwo * 1.5}px`;
+          if (i === animations.length-1) {
+            completed();
+          }
+        }, i * 10);
+      }
     }
-    else{
-      setTimeout(()=>{
-        arrayBar[barIdxOne].style.height = `${barIdxTwo*1.5}px`;
-
-      },i*10)
-    }
-      
-
-    }
-
+    
   }
 
   render() {
@@ -133,7 +141,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(205).fill(null),
+      numbers: Array(35).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -147,10 +155,9 @@ class App extends React.Component {
 
     if (arrayBars != null) {
       for (let i = 0; i < arrayBars.length; i++) {
-        setTimeout(()=>{
+        setTimeout(() => {
           arrayBars[i].style.backgroundColor = "skyblue";
-
-        })
+        });
         arrayBars[i].style.backgroundColor = "skyblue";
       }
     }
@@ -198,9 +205,7 @@ class App extends React.Component {
                 width: width,
                 height: num * 1.5,
               }}
-            >
-             
-            </div>
+            ></div>
           );
         })}
         <button onClick={this.changeColor}>ChangeColor</button>

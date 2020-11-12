@@ -25,19 +25,15 @@ function merge(array, firstIndex, median, lastIndex, animations) {
   while (i <= median && k <= lastIndex) {
     
     animations.push([i,k]);
-    console.log("i is: " + i);
-    console.log("k is: " + k);
 
     if (array[i] <= array[k]) {
       copyArray[j] = array[i];
       animations.push([j,array[i]]);
-      console.log("j is: " + j);
       j++;
       i++;
     } else {
       copyArray[j] = array[k];
       animations.push([j,array[k]]);
-      console.log("j is: " + j);
       j++;
       k++;
     }
@@ -47,7 +43,6 @@ function merge(array, firstIndex, median, lastIndex, animations) {
   while (i <= median) {
     copyArray[j] = array[i];
     animations.push([i,i]);
-    console.log("i is: " + i);
     animations.push([j,array[i]]);
     j++;
     i++;
@@ -56,7 +51,6 @@ function merge(array, firstIndex, median, lastIndex, animations) {
   while (k <= lastIndex) {
     copyArray[j] = array[k];
     animations.push([k,k]);
-    console.log("k is: " + k);
     animations.push([j,array[k]]);
     j++;
     k++;
