@@ -13,16 +13,16 @@ async function display2(comparisons, arrayLength, LastIndex) {
     if (arrayBar[barIndex].style.height > arrayBar[barIndex+1].style.height) {
       arrayBar[barIndex].style.backgroundColor = "red";
       arrayBar[barIndex + 1].style.backgroundColor = "red";
-      await sleep(1);
+      await sleep(30);
     }
     //console.log("Red Display")
-    await sleep(0.5);
+    await sleep(5);
     if (i < comparisons.length) {
       arrayBar[barIndex].style.height = `${comparisons[i][0] * 1.5}px`;
       arrayBar[barIndex + 1].style.height = `${comparisons[i][1] * 1.5}px`;
       arrayBar[barIndex].style.backgroundColor = "LawnGreen";
       arrayBar[barIndex + 1].style.backgroundColor = "LawnGreen";
-      await sleep(1);
+      await sleep(30);
 
       arrayBar[barIndex].style.backgroundColor = "skyblue";
       barIndex++;
@@ -141,7 +141,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(35).fill(null),
+      numbers: Array(50).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
