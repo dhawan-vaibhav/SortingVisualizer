@@ -1,7 +1,124 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import { getMergeSortAnimations } from "./mergeSort.js";
+import { getQuickSortAnimations } from "./Quicksort.js";
 import "./App.css";
+
+class Quicksort extends Component {
+  constructor(props) {
+    super(props);
+    this.sort = this.sort.bind(this);
+  }
+
+  sort() {
+    const numbers = this.props.numbers.slice();
+    const copy = numbers.slice();
+    copy.sort(function(a,b){return a-b});
+    const arrayBar = document.getElementsByClassName("bar");
+
+    const animations = getQuickSortAnimations(numbers);
+    const result = compareArrays(numbers,copy);
+    console.log(result);
+
+    for (let i = 0; i < numbers.length; i++) {
+      console.log(numbers[i]);
+    }
+    /* for (let i = 0; i < numbers.length; i++) {
+      console.log(numbers[i]);
+    }
+    const animations = getQuickSortAnimations(numbers);
+
+    //step1: highlight the pivot(problem step)
+    //step2: highlight the element in color red
+    //step3: swap the element with the wall, but if the element is bigger than just swap with itself so you wont see any change
+    //step4: change the color back to normal of the current element
+    //step5: swap the pivot and wall
+    //step6: change color of the pivot(problem step)
+    const animationSpeed = 1000;
+    for (let i = 0; i < animations.length; i++) {
+      const [type] = animations[i];
+
+      if (type === "pivot") {
+        setTimeout(async function () {
+          const [barIdxOne, barIdxTwo] = animations[i];
+          arrayBar[barIdxTwo].style.backgroundColor = "yellow";
+        }, i * animationSpeed);
+      } else if (type === "currentElement") {
+        setTimeout(async function () {
+          const [barIdxOne, barIdxTwo] = animations[i];
+          await sleep(animationSpeed);
+          arrayBar[barIdxTwo].style.backgroundColor = "LawnGreen";
+          await sleep(animationSpeed);
+          arrayBar[barIdxTwo].style.backgroundColor = "skyBlue";
+        }, i * animationSpeed);
+      } else if (type === "swap") {
+        setTimeout(async function () {
+          const [
+            barIdxOne,
+            currentIdx,
+            currentHeight,
+            wallIdx,
+            wallHeight,
+          ] = animations[i];
+
+          if (currentIdx === wallIdx) {
+            arrayBar[currentIdx].style.backgroundColor = "LawnGreen";
+            await sleep(animationSpeed);
+            arrayBar[currentIdx].style.backgroundColor = "skyBlue";
+          } else {
+            arrayBar[wallIdx].style.backgroundColor = "LawnGreen";
+            arrayBar[currentIdx].style.backgroundColor = "LawnGreen";
+            await sleep(animationSpeed);
+            arrayBar[currentIdx].style.height = `${currentHeight * 1.5}px`;
+            arrayBar[wallIdx].style.height = `${wallHeight * 1.5}px`;
+            arrayBar[currentIdx].style.backgroundColor = "red";
+            arrayBar[wallIdx].style.backgroundColor = "red";
+            await sleep(animationSpeed);
+            arrayBar[currentIdx].style.backgroundColor = "skyBlue";
+            arrayBar[wallIdx].style.backgroundColor = "skyBlue";
+          }
+        }, i * animationSpeed);
+      } else if (type === "pivotSwap") {
+        setTimeout(async function () {
+          const [
+            barIdxOne,
+            wallIdx,
+            wallNewHeight,
+            pivotIdx,
+            pivotNewHeight,
+          ] = animations[i];
+          arrayBar[wallIdx].style.backgroundColor = "LawnGreen";
+          arrayBar[pivotIdx].style.backgroundColor = "LawnGreen";
+          await sleep(animationSpeed);
+
+          arrayBar[pivotIdx].style.height = `${pivotNewHeight * 1.5}px`;
+          arrayBar[wallIdx].style.height = `${wallNewHeight * 1.5}px`;
+
+          arrayBar[pivotIdx].style.backgroundColor = "red";
+          arrayBar[wallIdx].style.backgroundColor = "red";
+
+          await sleep(animationSpeed);
+
+          arrayBar[wallIdx].style.backgroundColor = "purple";
+          arrayBar[pivotIdx].style.backgroundColor = "skyBlue";
+        }, i * animationSpeed);
+      } else {
+        setTimeout(() => {
+          const [barIdxOne, barIdxTwo] = animations[i];
+          arrayBar[barIdxTwo].style.backgroundColor = "purple";
+        }, i * animationSpeed);
+      }
+    } */
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.sort}>QuickSort</button>
+      </div>
+    );
+  }
+}
 
 async function display2(comparisons, arrayLength, LastIndex) {
   const arrayBar = document.getElementsByClassName("bar");
@@ -10,7 +127,7 @@ async function display2(comparisons, arrayLength, LastIndex) {
   for (let i = 0; i < comparisons.length + LastIndex; i++) {
     arrayBar[barIndex].style.backgroundColor = "LawnGreen";
     arrayBar[barIndex + 1].style.backgroundColor = "LawnGreen";
-    if (arrayBar[barIndex].style.height > arrayBar[barIndex+1].style.height) {
+    if (arrayBar[barIndex].style.height > arrayBar[barIndex + 1].style.height) {
       arrayBar[barIndex].style.backgroundColor = "red";
       arrayBar[barIndex + 1].style.backgroundColor = "red";
       await sleep(30);
@@ -71,20 +188,19 @@ class MergeSort extends Component {
           await sleep(10);
           arrayBar[barIdxOne].style.backgroundColor = "skyBlue";
           arrayBar[barIdxTwo].style.backgroundColor = "skyBlue";
-          if (i === animations.length-1) {
+          if (i === animations.length - 1) {
             completed();
           }
         }, i * 10);
       } else {
         setTimeout(() => {
           arrayBar[barIdxOne].style.height = `${barIdxTwo * 1.5}px`;
-          if (i === animations.length-1) {
+          if (i === animations.length - 1) {
             completed();
           }
         }, i * 10);
       }
     }
-    
   }
 
   render() {
@@ -141,12 +257,13 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(50).fill(null),
+      numbers: Array(40).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
     this.bubbleSort = this.bubbleSort.bind(this);
     this.mergeSort = this.mergeSort.bind(this);
+    this.quickSort = this.quickSort.bind(this);
   }
 
   handleClick() {
@@ -163,7 +280,7 @@ class App extends React.Component {
     }
 
     for (let i = 0; i < numbers.length; i++) {
-      numbers[i] = Math.floor(Math.random() * 300) + 10;
+      numbers[i] = Math.floor(Math.random() * 200) + 50;
     }
 
     this.setState({ numbers: numbers });
@@ -171,6 +288,9 @@ class App extends React.Component {
 
   updateState(numbers) {
     this.setState({ numbers: numbers });
+  }
+  quickSort() {
+    return <Quicksort numbers={this.state.numbers} />;
   }
 
   mergeSort() {
@@ -195,7 +315,7 @@ class App extends React.Component {
       <div>
         <button onClick={this.handleClick}>Click</button>
         {this.state.numbers.map((num, index) => {
-          const width = 2;
+          const width = 5;
           const left = width * index + index * 2 + 10;
           return (
             <div
@@ -211,6 +331,7 @@ class App extends React.Component {
         <button onClick={this.changeColor}>ChangeColor</button>
         {this.bubbleSort()}
         {this.mergeSort()}
+        {this.quickSort()}
       </div>
     );
   }
