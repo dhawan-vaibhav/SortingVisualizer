@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import { getMergeSortAnimations } from "./mergeSort.js";
 import { getQuickSortAnimations } from "./Quicksort.js";
+import { heapSort } from "./heapSort.js";
 import "./App.css";
 
 class Quicksort extends Component {
@@ -13,102 +14,78 @@ class Quicksort extends Component {
   sort() {
     const numbers = this.props.numbers.slice();
     const copy = numbers.slice();
-    copy.sort(function(a,b){return a-b});
+    copy.sort(function (a, b) {
+      return a - b;
+    });
     const arrayBar = document.getElementsByClassName("bar");
 
     const animations = getQuickSortAnimations(numbers);
-    const result = compareArrays(numbers,copy);
-    console.log(result);
+    const animationSpeed = 30;
 
-    for (let i = 0; i < numbers.length; i++) {
-      console.log(numbers[i]);
-    }
-    /* for (let i = 0; i < numbers.length; i++) {
-      console.log(numbers[i]);
-    }
-    const animations = getQuickSortAnimations(numbers);
-
-    //step1: highlight the pivot(problem step)
-    //step2: highlight the element in color red
-    //step3: swap the element with the wall, but if the element is bigger than just swap with itself so you wont see any change
-    //step4: change the color back to normal of the current element
-    //step5: swap the pivot and wall
-    //step6: change color of the pivot(problem step)
-    const animationSpeed = 1000;
     for (let i = 0; i < animations.length; i++) {
       const [type] = animations[i];
 
       if (type === "pivot") {
-        setTimeout(async function () {
-          const [barIdxOne, barIdxTwo] = animations[i];
-          arrayBar[barIdxTwo].style.backgroundColor = "yellow";
-        }, i * animationSpeed);
-      } else if (type === "currentElement") {
-        setTimeout(async function () {
-          const [barIdxOne, barIdxTwo] = animations[i];
-          await sleep(animationSpeed);
-          arrayBar[barIdxTwo].style.backgroundColor = "LawnGreen";
-          await sleep(animationSpeed);
-          arrayBar[barIdxTwo].style.backgroundColor = "skyBlue";
-        }, i * animationSpeed);
-      } else if (type === "swap") {
-        setTimeout(async function () {
-          const [
-            barIdxOne,
-            currentIdx,
-            currentHeight,
-            wallIdx,
-            wallHeight,
-          ] = animations[i];
+        const pivotIdx = animations[i][1];
 
-          if (currentIdx === wallIdx) {
-            arrayBar[currentIdx].style.backgroundColor = "LawnGreen";
-            await sleep(animationSpeed);
-            arrayBar[currentIdx].style.backgroundColor = "skyBlue";
-          } else {
-            arrayBar[wallIdx].style.backgroundColor = "LawnGreen";
-            arrayBar[currentIdx].style.backgroundColor = "LawnGreen";
-            await sleep(animationSpeed);
-            arrayBar[currentIdx].style.height = `${currentHeight * 1.5}px`;
-            arrayBar[wallIdx].style.height = `${wallHeight * 1.5}px`;
-            arrayBar[currentIdx].style.backgroundColor = "red";
-            arrayBar[wallIdx].style.backgroundColor = "red";
-            await sleep(animationSpeed);
-            arrayBar[currentIdx].style.backgroundColor = "skyBlue";
-            arrayBar[wallIdx].style.backgroundColor = "skyBlue";
+        setTimeout(async () => {
+          arrayBar[pivotIdx].style.backgroundColor = "yellow";
+        }, i * animationSpeed);
+      } else if (type === "pointer") {
+        const previous = animations[i][1];
+        const pointerIdxOne = animations[i][2];
+        const pointerIdxTwo = animations[i][3];
+
+        setTimeout(() => {
+          arrayBar[previous].style.backgroundColor = "skyBlue";
+          arrayBar[pointerIdxOne].style.backgroundColor = "LawnGreen";
+          if (pointerIdxTwo > 0) {
+            arrayBar[pointerIdxTwo].style.backgroundColor = "LawnGreen";
           }
         }, i * animationSpeed);
-      } else if (type === "pivotSwap") {
-        setTimeout(async function () {
-          const [
-            barIdxOne,
-            wallIdx,
-            wallNewHeight,
-            pivotIdx,
-            pivotNewHeight,
-          ] = animations[i];
-          arrayBar[wallIdx].style.backgroundColor = "LawnGreen";
-          arrayBar[pivotIdx].style.backgroundColor = "LawnGreen";
-          await sleep(animationSpeed);
+      } else if (type === "swap") {
+        const [
+          barIdxOne,
+          leftPointer,
+          leftNewHeight,
+          rightPointer,
+          rightNewHeight,
+        ] = animations[i];
 
-          arrayBar[pivotIdx].style.height = `${pivotNewHeight * 1.5}px`;
-          arrayBar[wallIdx].style.height = `${wallNewHeight * 1.5}px`;
-
-          arrayBar[pivotIdx].style.backgroundColor = "red";
-          arrayBar[wallIdx].style.backgroundColor = "red";
-
-          await sleep(animationSpeed);
-
-          arrayBar[wallIdx].style.backgroundColor = "purple";
-          arrayBar[pivotIdx].style.backgroundColor = "skyBlue";
-        }, i * animationSpeed);
-      } else {
         setTimeout(() => {
-          const [barIdxOne, barIdxTwo] = animations[i];
-          arrayBar[barIdxTwo].style.backgroundColor = "purple";
+          arrayBar[leftPointer].style.backgroundColor = "red";
+          arrayBar[rightPointer].style.backgroundColor = "red";
+          arrayBar[leftPointer].style.height = `${leftNewHeight * 1.5}px`;
+          arrayBar[rightPointer].style.height = `${rightNewHeight * 1.5}px`;
+          arrayBar[leftPointer].style.backgroundColor = "skyBlue";
+          arrayBar[rightPointer].style.backgroundColor = "skyBlue";
+        }, i * animationSpeed);
+      } else if (type === "pivotSwap") {
+        const [
+          barIdxOne,
+          leftPointer,
+          leftNewHeight,
+          rightPointer,
+          rightNewHeight,
+        ] = animations[i];
+
+        setTimeout(() => {
+          arrayBar[leftPointer].style.backgroundColor = "red";
+          arrayBar[rightPointer].style.backgroundColor = "red";
+          arrayBar[leftPointer].style.height = `${leftNewHeight * 1.5}px`;
+          arrayBar[rightPointer].style.height = `${rightNewHeight * 1.5}px`;
+          arrayBar[rightPointer].style.backgroundColor = "skyBlue";
+          arrayBar[leftPointer].style.backgroundColor = "purple";
+        }, i * animationSpeed);
+      } else if (type === "pivotSorted") {
+        const pivotIdx = animations[i][1];
+
+        setTimeout(() => {
+          if (pivotIdx >= 0 && pivotIdx <= numbers.length - 1)
+            arrayBar[pivotIdx].style.backgroundColor = "purple";
         }, i * animationSpeed);
       }
-    } */
+    }
   }
 
   render() {
@@ -253,11 +230,96 @@ class BubbleSort extends Component {
   }
 }
 
+class HeapSort extends Component {
+  constructor(props) {
+    super(props);
+    this.sort = this.sort.bind(this);
+  }
+
+  sort() {
+    let array = this.props.numbers.slice();
+    let animations = heapSort(array);
+    const bars = document.getElementsByClassName("bar");
+    const animationSpeed = 100;
+
+    heapDisplay(animations, bars);
+  }
+
+  render() {
+    return (
+      <div>
+        <button onClick={this.sort}>HeapSort</button>
+      </div>
+    );
+  }
+}
+async function heapDisplay(animations, bars) {
+  const animationSpeed = 100;
+  for (let i = 0; i < animations.length; i++) {
+    const [type] = animations[i];
+
+    if (type === "swapComparison") {
+      const [type, barIdxOne, barIdxTwo, num1, num2] = animations[i];
+      setTimeout(async()=>{
+      bars[barIdxOne].style.backgroundColor = "lawnGreen";
+      bars[barIdxTwo].style.backgroundColor = "lawnGreen";
+
+      await sleep(animationSpeed);
+
+      bars[barIdxOne].style.backgroundColor = "red";
+      bars[barIdxTwo].style.backgroundColor = "red";
+
+      await sleep(animationSpeed);
+
+      bars[barIdxOne].style.height = `${num1 * 1.5}px`;
+      bars[barIdxTwo].style.height = `${num2 * 1.5}px`;
+
+      await sleep(animationSpeed);
+
+      bars[barIdxOne].style.backgroundColor = "skyBlue";
+      bars[barIdxTwo].style.backgroundColor = "skyBlue";
+      },i*animationSpeed);
+    } else if (type === "noSwapComparison") {
+      const [type, barIdxOne, barIdxTwo] = animations[i];
+      setTimeout(async ()=>{
+      bars[barIdxOne].style.backgroundColor = "red";
+      bars[barIdxTwo].style.backgroundColor = "red";
+
+      await sleep(animationSpeed);
+
+      bars[barIdxOne].style.backgroundColor = "skyBlue";
+      bars[barIdxTwo].style.backgroundColor = "skyBlue";
+      },i*animationSpeed);
+    } else if (type === "maxSwap") {
+      const [type, barIdxOne, barIdxTwo, num1, num2] = animations[i];
+
+      setTimeout(async ()=>{
+      bars[barIdxOne].style.backgroundColor = "lawnGreen";
+      bars[barIdxTwo].style.backgroundColor = "lawnGreen";
+
+     await sleep(animationSpeed);
+
+      bars[barIdxOne].style.backgroundColor = "red";
+      bars[barIdxTwo].style.backgroundColor = "red";
+
+    await sleep(animationSpeed);
+
+      bars[barIdxOne].style.height = `${num1 * 1.5}px`;
+      bars[barIdxTwo].style.height = `${num2 * 1.5}px`;
+
+      await sleep(animationSpeed);
+
+      bars[barIdxOne].style.backgroundColor = "skyBlue";
+      bars[barIdxTwo].style.backgroundColor = "purple";
+      },i*animationSpeed);
+    }
+  }
+}
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(40).fill(null),
+      numbers: Array(90).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -267,7 +329,7 @@ class App extends React.Component {
   }
 
   handleClick() {
-    const numbers = this.state.numbers.slice();
+    let numbers = this.state.numbers.slice();
     const arrayBars = document.getElementsByClassName("bar");
 
     if (arrayBars != null) {
@@ -280,7 +342,7 @@ class App extends React.Component {
     }
 
     for (let i = 0; i < numbers.length; i++) {
-      numbers[i] = Math.floor(Math.random() * 200) + 50;
+      numbers[i] = Math.floor(Math.random() * 300) + 10;
     }
 
     this.setState({ numbers: numbers });
@@ -299,6 +361,9 @@ class App extends React.Component {
 
   bubbleSort() {
     return <BubbleSort numbers={this.state.numbers} />;
+  }
+  heapSort() {
+    return <HeapSort numbers={this.state.numbers} />;
   }
   changeColor() {
     const arrayBar = document.getElementsByClassName("bar");
@@ -332,6 +397,7 @@ class App extends React.Component {
         {this.bubbleSort()}
         {this.mergeSort()}
         {this.quickSort()}
+        {this.heapSort()}
       </div>
     );
   }

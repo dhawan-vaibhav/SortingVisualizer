@@ -6,14 +6,17 @@ export function getQuickSortAnimations(array) {
 
 function quickSort(array, left, right, animations) {
   let pivotIdx = partition(array, left, right, animations);
+  animations.push(["pivotSorted",pivotIdx]);
 
   if (left < pivotIdx - 1) {
     quickSort(array, left, pivotIdx - 1, animations);
   }
+  animations.push(["pivotSorted",pivotIdx-1]);
 
   if (right > pivotIdx + 1) {
     quickSort(array, pivotIdx + 1, right, animations);
   }
+  animations.push(["pivotSorted",pivotIdx+1]);
 }
 
 function partition(array, left, right,animations) {
@@ -21,24 +24,28 @@ function partition(array, left, right,animations) {
   let j = right - 1;
   let pivot = array[right];
 
+  animations.push(["pivot",right])
+
   while (i <= j) {
-    animations.push([i,i]);
-    animations.push([j,j]);
+    animations.push(["pointer",i,i,j]);
     
-    while (array[i] < pivot) {
+    while (array[i] < pivot && i<=j) {
+      let previous=i;
       i++;
-      animations.push([i,i]);
+      animations.push(["pointer",previous,i,j]);
     }
 
-    while (array[j] > pivot) {
+    while (array[j] > pivot &&i<=j ) {
+      let previous = j;
       j--;
-      animations.push([j,j]);
+      animations.push(["pointer",previous,i,j]);
     }
 
     if (i <= j) {
       let temp = array[i];
       array[i] = array[j];
       array[j] = temp;
+      animations.push(["swap",i,array[i],j,array[j]]);
       i++;
       j--;
     }
@@ -46,6 +53,7 @@ function partition(array, left, right,animations) {
       let temp = array[i];
       array[i] = pivot;
       array[right] = temp;
+      animations.push(["pivotSwap",i,array[i],right,array[right]]);
     }
   }
 
