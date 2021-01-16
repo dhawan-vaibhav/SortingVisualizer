@@ -254,7 +254,7 @@ class HeapSort extends Component {
   }
 }
 async function heapDisplay(animations, bars) {
-  const animationSpeed = 100;
+  const animationSpeed = 30;
   for (let i = 0; i < animations.length; i++) {
     const [type] = animations[i];
 
@@ -278,6 +278,7 @@ async function heapDisplay(animations, bars) {
 
       bars[barIdxOne].style.backgroundColor = "skyBlue";
       bars[barIdxTwo].style.backgroundColor = "skyBlue";
+      await sleep(animationSpeed);
       },i*animationSpeed);
     } else if (type === "noSwapComparison") {
       const [type, barIdxOne, barIdxTwo] = animations[i];
@@ -289,6 +290,7 @@ async function heapDisplay(animations, bars) {
 
       bars[barIdxOne].style.backgroundColor = "skyBlue";
       bars[barIdxTwo].style.backgroundColor = "skyBlue";
+      await sleep(animationSpeed);
       },i*animationSpeed);
     } else if (type === "maxSwap") {
       const [type, barIdxOne, barIdxTwo, num1, num2] = animations[i];
@@ -311,6 +313,7 @@ async function heapDisplay(animations, bars) {
 
       bars[barIdxOne].style.backgroundColor = "skyBlue";
       bars[barIdxTwo].style.backgroundColor = "purple";
+      await sleep(animationSpeed);
       },i*animationSpeed);
     }
   }
@@ -319,7 +322,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      numbers: Array(90).fill(null),
+      numbers: Array(210).fill(null),
     };
     this.handleClick = this.handleClick.bind(this);
     this.updateState = this.updateState.bind(this);
@@ -378,7 +381,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.handleClick}>Click</button>
+        <button onClick={this.handleClick}>Generate Array</button>
         {this.state.numbers.map((num, index) => {
           const width = 5;
           const left = width * index + index * 2 + 10;
@@ -393,7 +396,9 @@ class App extends React.Component {
             ></div>
           );
         })}
+        <div>
         <button onClick={this.changeColor}>ChangeColor</button>
+        </div>
         {this.bubbleSort()}
         {this.mergeSort()}
         {this.quickSort()}
