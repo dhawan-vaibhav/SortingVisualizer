@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import { getMergeSortAnimations } from "./mergeSort.js";
 import { getQuickSortAnimations } from "./Quicksort.js";
 import { heapSort } from "./heapSort.js";
@@ -44,13 +43,8 @@ class Quicksort extends Component {
           }
         }, i * animationSpeed);
       } else if (type === "swap") {
-        const [
-          barIdxOne,
-          leftPointer,
-          leftNewHeight,
-          rightPointer,
-          rightNewHeight,
-        ] = animations[i];
+        const [leftPointer, leftNewHeight, rightPointer, rightNewHeight] =
+          animations[i];
 
         setTimeout(() => {
           arrayBar[leftPointer].style.backgroundColor = "red";
@@ -61,13 +55,8 @@ class Quicksort extends Component {
           arrayBar[rightPointer].style.backgroundColor = "skyBlue";
         }, i * animationSpeed);
       } else if (type === "pivotSwap") {
-        const [
-          barIdxOne,
-          leftPointer,
-          leftNewHeight,
-          rightPointer,
-          rightNewHeight,
-        ] = animations[i];
+        const [leftPointer, leftNewHeight, rightPointer, rightNewHeight] =
+          animations[i];
 
         setTimeout(() => {
           arrayBar[leftPointer].style.backgroundColor = "red";
@@ -158,7 +147,7 @@ class MergeSort extends Component {
     const animations = getMergeSortAnimations(numbers);
     for (let i = 0; i < animations.length; i++) {
       const [barIdxOne, barIdxTwo] = animations[i];
-      if (i % 2 == 0) {
+      if (i % 2 === 0) {
         setTimeout(async function blink() {
           arrayBar[barIdxOne].style.backgroundColor = "red";
           arrayBar[barIdxTwo].style.backgroundColor = "red";
@@ -240,7 +229,6 @@ class HeapSort extends Component {
     let array = this.props.numbers.slice();
     let animations = heapSort(array);
     const bars = document.getElementsByClassName("bar");
-    const animationSpeed = 100;
 
     heapDisplay(animations, bars);
   }
@@ -260,61 +248,64 @@ async function heapDisplay(animations, bars) {
 
     if (type === "swapComparison") {
       const [type, barIdxOne, barIdxTwo, num1, num2] = animations[i];
-      setTimeout(async()=>{
-      bars[barIdxOne].style.backgroundColor = "lawnGreen";
-      bars[barIdxTwo].style.backgroundColor = "lawnGreen";
+      console.log(type);
+      setTimeout(async () => {
+        bars[barIdxOne].style.backgroundColor = "lawnGreen";
+        bars[barIdxTwo].style.backgroundColor = "lawnGreen";
 
-      await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.backgroundColor = "red";
-      bars[barIdxTwo].style.backgroundColor = "red";
+        bars[barIdxOne].style.backgroundColor = "red";
+        bars[barIdxTwo].style.backgroundColor = "red";
 
-      await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.height = `${num1 * 1.5}px`;
-      bars[barIdxTwo].style.height = `${num2 * 1.5}px`;
+        bars[barIdxOne].style.height = `${num1 * 1.5}px`;
+        bars[barIdxTwo].style.height = `${num2 * 1.5}px`;
 
-      await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.backgroundColor = "skyBlue";
-      bars[barIdxTwo].style.backgroundColor = "skyBlue";
-      await sleep(animationSpeed);
-      },i*animationSpeed);
+        bars[barIdxOne].style.backgroundColor = "skyBlue";
+        bars[barIdxTwo].style.backgroundColor = "skyBlue";
+        await sleep(animationSpeed);
+      }, i * animationSpeed);
     } else if (type === "noSwapComparison") {
       const [type, barIdxOne, barIdxTwo] = animations[i];
-      setTimeout(async ()=>{
-      bars[barIdxOne].style.backgroundColor = "red";
-      bars[barIdxTwo].style.backgroundColor = "red";
+      console.log(type);
+      setTimeout(async () => {
+        bars[barIdxOne].style.backgroundColor = "red";
+        bars[barIdxTwo].style.backgroundColor = "red";
 
-      await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.backgroundColor = "skyBlue";
-      bars[barIdxTwo].style.backgroundColor = "skyBlue";
-      await sleep(animationSpeed);
-      },i*animationSpeed);
+        bars[barIdxOne].style.backgroundColor = "skyBlue";
+        bars[barIdxTwo].style.backgroundColor = "skyBlue";
+        await sleep(animationSpeed);
+      }, i * animationSpeed);
     } else if (type === "maxSwap") {
       const [type, barIdxOne, barIdxTwo, num1, num2] = animations[i];
+      console.log(type);
 
-      setTimeout(async ()=>{
-      bars[barIdxOne].style.backgroundColor = "lawnGreen";
-      bars[barIdxTwo].style.backgroundColor = "lawnGreen";
+      setTimeout(async () => {
+        bars[barIdxOne].style.backgroundColor = "lawnGreen";
+        bars[barIdxTwo].style.backgroundColor = "lawnGreen";
 
-     await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.backgroundColor = "red";
-      bars[barIdxTwo].style.backgroundColor = "red";
+        bars[barIdxOne].style.backgroundColor = "red";
+        bars[barIdxTwo].style.backgroundColor = "red";
 
-    await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.height = `${num1 * 1.5}px`;
-      bars[barIdxTwo].style.height = `${num2 * 1.5}px`;
+        bars[barIdxOne].style.height = `${num1 * 1.5}px`;
+        bars[barIdxTwo].style.height = `${num2 * 1.5}px`;
 
-      await sleep(animationSpeed);
+        await sleep(animationSpeed);
 
-      bars[barIdxOne].style.backgroundColor = "skyBlue";
-      bars[barIdxTwo].style.backgroundColor = "purple";
-      await sleep(animationSpeed);
-      },i*animationSpeed);
+        bars[barIdxOne].style.backgroundColor = "skyBlue";
+        bars[barIdxTwo].style.backgroundColor = "purple";
+        await sleep(animationSpeed);
+      }, i * animationSpeed);
     }
   }
 }
@@ -397,7 +388,7 @@ class App extends React.Component {
           );
         })}
         <div>
-        <button onClick={this.changeColor}>ChangeColor</button>
+          <button onClick={this.changeColor}>ChangeColor</button>
         </div>
         {this.bubbleSort()}
         {this.mergeSort()}
